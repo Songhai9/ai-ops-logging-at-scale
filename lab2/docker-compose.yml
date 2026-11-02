@@ -21,7 +21,8 @@ services:
     volumes:
       - ./alloy/config.alloy:/etc/alloy/config.alloy
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    command: run --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.alloy
+      - alloy-data:/var/lib/alloy/data
+    command: run --storage.path=/var/lib/alloy/data --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.alloy
     depends_on:
       - loki
     networks:
@@ -61,6 +62,7 @@ services:
       app: "sample-flask"
 
 volumes:
+  alloy-data:
   loki-data:
   grafana-data:
 

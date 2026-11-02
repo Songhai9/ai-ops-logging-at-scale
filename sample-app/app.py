@@ -1,4 +1,5 @@
 import logging
+import os
 import json
 import time
 import random
@@ -16,8 +17,8 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
         log_record['timestamp'] = datetime.utcnow().isoformat()
         log_record['level'] = record.levelname
         log_record['logger'] = record.name
-        log_record['app'] = 'sample-flask-app'
-        log_record['container_name'] = 'sample-app'
+        log_record['app'] = os.getenv('APP_NAME', 'sample-flask-app')
+        log_record['container_name'] = os.getenv('CONTAINER_NAME', 'sample-app')
 
 logger = logging.getLogger()
 logHandler = logging.StreamHandler()

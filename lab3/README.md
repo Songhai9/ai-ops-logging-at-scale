@@ -1,41 +1,11 @@
 # Lab 3 Assets: Correlating Metrics and Logs
 
-## 🎉 Lab Improvements & Fixes
+## Correlation dashboard
 
-### ✅ Question 7 Data Links - NOW WORKING!
-
-**Previous Issue**: Manual data link configuration was complex and error-prone.
-
-**Fix Applied**: Data links are now **pre-configured at the datasource level**! This means:
-- ✅ Automatic "View Logs" links appear when hovering over ANY metric data point
-- ✅ No manual configuration required
-- ✅ Works across all dashboards automatically
-- ✅ Three correlation options available: "View Logs", "View All Logs", and "View Error Logs"
-
-**How to Use**:
-1. Open any metrics panel in a dashboard
-2. Hover over a data point on the graph
-3. See "View Logs" links in the tooltip
-4. Click to navigate to Explore with pre-filled LogQL query!
-
-### 📊 Pre-Configured Dashboard
-
-A complete demonstration dashboard is now automatically provisioned:
-- **Name**: "Lab 3: Unified Observability - Metrics & Logs"
-- **Location**: Dashboards → AIOps Labs folder
-- **Features**:
-  - HTTP Request Rate with data links
-  - HTTP Error Rate (perfect for incident investigation)
-  - Response time metrics
-  - Real-time logs panel (time-synchronized with metrics)
-  - Ready for Questions 7-12 validation
-
-### 📚 New Documentation
-
-- **LAB_FIXES_AND_VALIDATION_GUIDE.md** - Comprehensive guide for Questions 7-12 validation
-- **QUICK_REFERENCE.md** - Quick reference card with commands and tips
-
----
+Prometheus and Loki have explicit UIDs matching the provisioned dashboard.
+Its first three metric panels contain data links to application logs in Explore.
+These panel links do not automatically appear on unrelated dashboards.
+No tracing backend is deployed; synthetic trace IDs are only log fields.
 
 ## Overview
 
@@ -134,8 +104,8 @@ assets/
 ### 1. Deploy the Stack
 
 ```bash
-cd /root
-docker compose -f assets/docker-compose.yml up -d
+cd lab3  # from the repository root
+docker compose up -d --build
 ```
 
 ### 2. Verify Services

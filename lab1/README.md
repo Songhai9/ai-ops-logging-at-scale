@@ -61,7 +61,7 @@ assets/
 ing
 
 **Customization Options**:
-- Change retention period in `limits_config.reject_old_samples_max_age`
+- `reject_old_samples_max_age` rejects old entries at ingestion; it does not delete stored logs. Configure retention with the Compactor and `limits_config.retention_period`.
 - Adjust ingestion limits in `limits_config.ingestion_rate_mb`
 - Modify chunk settings for different workloads
 

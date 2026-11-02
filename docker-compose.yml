@@ -53,7 +53,8 @@ services:
     volumes:
       - ./alloy/config.alloy:/etc/alloy/config.alloy
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    command: run --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.alloy
+      - alloy-data:/var/lib/alloy/data
+    command: run --storage.path=/var/lib/alloy/data --server.http.listen-addr=0.0.0.0:12345 /etc/alloy/config.alloy
     depends_on:
       - loki
     networks:
@@ -93,6 +94,19 @@ services:
       logging: "enabled"
       app: "sample-flask"
 
+  alert-receiver:
+    build: ./sample-app
+    container_name: alert-receiver
+    environment:
+      APP_NAME: alert-receiver
+      CONTAINER_NAME: alert-receiver
+    networks:
+      - aiops-observability
+    restart: unless-stopped
+    labels:
+      logging: "enabled"
+      app: "alert-receiver"
+
   alertmanager:
     image: prom/alertmanager:latest
     container_name: alertmanager
@@ -110,6 +124,7 @@ services:
     restart: unless-stopped
 
 volumes:
+  alloy-data:
   prometheus-data:
   loki-data:
   grafana-data:

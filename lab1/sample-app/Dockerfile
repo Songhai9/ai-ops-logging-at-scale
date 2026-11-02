@@ -3,7 +3,7 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Install dependencies
-RUN pip install --no-cache-dir flask python-json-logger
+RUN pip install --no-cache-dir Flask==3.0.0 python-json-logger==2.0.7
 
 # Copy application code
 COPY app.py /app/
