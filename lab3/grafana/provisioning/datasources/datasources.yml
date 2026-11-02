@@ -1,0 +1,35 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: "15s"
+      queryTimeout: "60s"
+      httpMethod: "POST"
+      # Data links for correlating metrics to logs
+      dataLinks:
+        - title: "View Logs"
+          url: "/explore?left=%7B%22datasource%22:%22Loki%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bcontainer_name%3D%5C%22sample-app%5C%22%7D%22,%22queryType%22:%22range%22%7D%5D,%22range%22:%7B%22from%22:%22$${__from}%22,%22to%22:%22$${__to}%22%7D%7D"
+        - title: "View All Logs for Time Range"
+          url: "/explore?left=%7B%22datasource%22:%22Loki%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bcontainer_name%3D%5C%22sample-app%5C%22%7D%22,%22queryType%22:%22range%22%7D%5D,%22range%22:%7B%22from%22:%22$${__from}%22,%22to%22:%22$${__to}%22%7D%7D"
+        - title: "View Error Logs"
+          url: "/explore?left=%7B%22datasource%22:%22Loki%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22expr%22:%22%7Bcontainer_name%3D%5C%22sample-app%5C%22%7D%20%7C%20json%20%7C%20level%3D%5C%22ERROR%5C%22%22,%22queryType%22:%22range%22%7D%5D,%22range%22:%7B%22from%22:%22$${__from}%22,%22to%22:%22$${__to}%22%7D%7D"
+
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    isDefault: false
+    editable: true
+    jsonData:
+      maxLines: 1000
+      derivedFields:
+        - datasourceUid: Prometheus
+          matcherRegex: "trace_id=(\\w+)"
+          name: TraceID
+          url: "$${__value.raw}"
