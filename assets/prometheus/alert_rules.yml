@@ -1,0 +1,62 @@
+groups:
+  - name: application_alerts
+    interval: 30s
+    rules:
+      # Alert 1: High Error Rate
+      - alert: HighErrorRate
+        expr: |
+          rate(http_errors_total[5m]) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+          team: backend
+          service: sample-app
+        annotations:
+          summary: "High error rate detected on {{ $labels.instance }}"
+          description: "Error rate is {{ $value | humanize }} errors/sec on {{ $labels.instance }}. Check application logs immediately."
+          runbook_url: "https://runbooks.example.com/high-error-rate"
+
+      # Alert 2: High Request Latency
+      - alert: HighRequestLatency
+        expr: |
+          histogram_quantile(0.95,
+            rate(http_request_duration_seconds_bucket[5m])
+          ) > 0.5
+        for: 2m
+        labels:
+          severity: warning
+          team: backend
+          service: sample-app
+        annotations:
+          summary: "High request latency on {{ $labels.instance }}"
+          description: "95th percentile latency is {{ $value | humanize }}s on {{ $labels.instance }}. Performance degradation detected."
+          runbook_url: "https://runbooks.example.com/high-latency"
+
+      # Alert 3: Service Down
+      - alert: ServiceDown
+        expr: |
+          up{job="sample-app"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          team: platform
+          service: sample-app
+        annotations:
+          summary: "Service {{ $labels.job }} is down"
+          description: "Instance {{ $labels.instance }} has been down for more than 30 seconds. Immediate action required."
+          runbook_url: "https://runbooks.example.com/service-down"
+
+      # Alert 4: High Memory Usage
+      - alert: HighMemoryUsage
+        expr: |
+          (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) /
+          node_memory_MemTotal_bytes * 100 > 80
+        for: 2m
+        labels:
+          severity: warning
+          team: platform
+          service: infrastructure
+        annotations:
+          summary: "High memory usage on {{ $labels.instance }}"
+          description: "Memory usage is {{ $value | humanize }}% on {{ $labels.instance }}. Consider scaling or investigating memory leaks."
+          runbook_url: "https://runbooks.example.com/high-memory"
